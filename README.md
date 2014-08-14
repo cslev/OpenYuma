@@ -51,8 +51,8 @@ Port 832
 Subsystem netconf /usr/sbin/netconf-subsystem
 # --- END NETCONF ---
 
-Now, you are ready to use it via the following command executed by root:
-netconfd --module=libtoaster --port=831
+Now, you are ready to use it via the following command using libtoaster as a module:
+# netconfd --module=libtoaster --port=831
 
 
 
