@@ -20,7 +20,9 @@ Note that the ports that you are going to use needs to be enabled in your sshd_c
 
 In order to install this version of OpenYuma do the steps required for OpenClovis' version.
 
+
 In Debian/Ubuntu based systems, install the following packages:
+-------
  - libxml2-dev 
  - libssh2-1-dev 
  - libgcrypt11-dev 
@@ -29,6 +31,7 @@ In Debian/Ubuntu based systems, install the following packages:
  - openssh-client openssh-server ssh
 
 Then, get the source:
+-------
     git clone https://github.com/cslev/OpenYuma.git
 
     cd OpenYuma
@@ -39,6 +42,7 @@ In your sshd_config file, you need to add the ports that you want to use and tel
 ssh server to use netconf-subsystem if connections from those ports are established.
 
 Open sshd_config file for editing:
+-------
     nano /etc/ssh/sshd_config
 
 Add the following lines (under the assumption that you want to use port 830,831, and 832)
@@ -51,8 +55,9 @@ below the line Port 22:
     Subsystem netconf /usr/sbin/netconf-subsystem
     # --- END NETCONF ---
 
-Now, you are ready to use it via the following command using libtoaster as a module:
-      # netconfd --module=libtoaster --port=831
+Now, you are ready to use it via the following command using libtoaster as a module:   
+
+    # netconfd --module=libtoaster --port=831
 
 
 
