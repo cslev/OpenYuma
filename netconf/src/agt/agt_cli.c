@@ -63,6 +63,7 @@ date         init     comment
 static val_value_t *cli_val = NULL;
 
 
+
 /********************************************************************
 * FUNCTION set_server_profile
 * 
@@ -180,27 +181,37 @@ static void
             log_get_debug_level_enum((const char *)VAL_STR(val));
     }
 
+    /* -------------------- LEVI -------------------------*/
+    /* port is now a leaf, and not leaf-list
     /* get leaf-list port parameter */
+//    val = val_find_child(valset, AGT_CLI_MODULE, NCX_EL_PORT);
+//    if (val && val->res == NO_ERR) {
+//        agt_profile->agt_ports[0] = VAL_UINT16(val);
+//
+//        val = val_find_next_child(valset, AGT_CLI_MODULE,
+//                                  NCX_EL_PORT, val);
+//        while (val) {
+//            done = FALSE;
+//            for (i = 0;         i < AGT_MAX_PORTS && !done; i++) {
+//                if (agt_profile->agt_ports[i] == VAL_UINT16(val)) {
+//                    done = TRUE;
+//                } else if (agt_profile->agt_ports[i] == 0) {
+//                    agt_profile->agt_ports[i] = VAL_UINT16(val);
+//                    done = TRUE;
+//                }
+//            }
+//            val = val_find_next_child(valset, AGT_CLI_MODULE,
+//                                      NCX_EL_PORT, val);
+//        }
+//    }
+    /* getting the port params */
     val = val_find_child(valset, AGT_CLI_MODULE, NCX_EL_PORT);
-    if (val && val->res == NO_ERR) {
-        agt_profile->agt_ports[0] = VAL_UINT16(val);
-
-        val = val_find_next_child(valset, AGT_CLI_MODULE,
-                                  NCX_EL_PORT, val);
-        while (val) {
-            done = FALSE;
-            for (i = 0;         i < AGT_MAX_PORTS && !done; i++) {
-                if (agt_profile->agt_ports[i] == VAL_UINT16(val)) {
-                    done = TRUE;
-                } else if (agt_profile->agt_ports[i] == 0) {
-                    agt_profile->agt_ports[i] = VAL_UINT16(val);
-                    done = TRUE;
-                }
-            }
-            val = val_find_next_child(valset, AGT_CLI_MODULE,
-                                      NCX_EL_PORT, val);
+        if (val && val->res == NO_ERR) {
+            agt_profile->agt_port = VAL_UINT(val);
         }
-    }
+        /* ---------------- END LEVI -------------------------*/
+
+
 
     /* eventlog-size param */
     val = val_find_child(valset, AGT_CLI_MODULE, NCX_EL_EVENTLOG_SIZE);

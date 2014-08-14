@@ -263,7 +263,12 @@ typedef struct agt_profile_t_ {
     boolean             agt_system_sorted;
     ncx_withdefaults_t  agt_defaultStyleEnum;
     agt_acmode_t        agt_accesscontrol_enum;
-    uint16              agt_ports[AGT_MAX_PORTS];
+
+    /* -------------- LEVI ----------------- */
+    // we do not have ports any more, only one port can be defined
+    //uint16              agt_ports[AGT_MAX_PORTS];
+    uint16				agt_port;
+    /* ------------ END LEVI --------------- */
 
     /****** state variables; TBD: move out of profile ******/
 

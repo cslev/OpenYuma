@@ -53,6 +53,13 @@ date         init     comment
 #include "ncxconst.h"
 #endif
 
+/* ------ LEVI ---------*/
+//accessing socketfile cli param
+#ifndef _H_agt_cli
+#include "agt_cli.h"
+#endif
+/* ------ END LEVI -----*/
+
 #ifndef _H_agt
 #include "agt.h"
 #endif
@@ -94,6 +101,7 @@ static struct sockaddr_un ncxname;
 static int    ncxsock;
 static char *user;
 static char *port;
+static char NCX_SOCKETFILE[100];
 
 static int traceLevel = 0;
 static FILE *errfile;
@@ -178,8 +186,10 @@ static status_t
     ncxsock = -1;
     ncxconnect = FALSE;
 
+
     /* get the client address */
     con = getenv("SSH_CONNECTION");
+
     if (!con) {
         SUBSYS_TRACE1( "ERROR: init_subsys(): "
                        "Get SSH_CONNECTION variable failed\n" );
@@ -231,9 +241,37 @@ static status_t
         return ERR_NCX_CONNECT_FAILED;
     } 
     ncxname.sun_family = AF_LOCAL;
-    strncpy(ncxname.sun_path, 
-            NCXSERVER_SOCKNAME, 
-            sizeof(ncxname.sun_path));
+
+    /* --------- LEVI --------- */
+    char begin[16] = "/tmp/ncxserver_";
+    char end[6] = ".sock";
+    sprintf(NCX_SOCKETFILE,"%s%s%s",begin,port,end);
+
+    fprintf(errfile,
+    		"\n\n====================\n"
+    		"Incoming session\n"
+    		"--------------------\n"
+    		"Client address: %s\n"
+    		"User: %s\n"
+    		"NETCONF Port: %s\n"
+    		"Socket file: %s\n"
+    		"====================\n",
+    		client_addr,
+    		user,
+    		port,
+    		NCX_SOCKETFILE);
+    fflush(errfile);
+
+    strncpy(ncxname.sun_path,
+                NCX_SOCKETFILE,
+                sizeof(ncxname.sun_path));
+
+
+//    strncpy(ncxname.sun_path,
+//            NCXSERVER_SOCKNAME,
+//            sizeof(ncxname.sun_path));
+
+    /* -------- END LEVI --------- */
 
     /* try to connect to the NCX server */
     ret = connect(ncxsock,
@@ -482,6 +520,9 @@ int main (int argc, char **argv)
 {
     status_t  res;
     const char *msg;
+    char logfile[40] = "/tmp/netconf-subsystem.log";
+
+    errfile = fopen( logfile, "a" );
 
     configure_logging( argc, argv );
 
@@ -508,7 +549,14 @@ int main (int argc, char **argv)
         SUBSYS_TRACE1( "ERROR: io_loop(): exited with error %s \n", msg );
     }
 
+
+    fprintf(errfile,"%s\n", msg);
+    fflush(errfile);
+    fprintf(errfile,"SESSION TERMINATED with %s:%s\n",client_addr, port);
+    fflush(errfile);
+
     cleanup_subsys();
+
 
     if (res != NO_ERR) {
         return 1;

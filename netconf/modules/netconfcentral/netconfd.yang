@@ -295,8 +295,19 @@ module netconfd {
         type uint32;
         default 10;
       }
-
-      leaf-list port {
+ /* ----------------------- LEVI ----------------------------- */
+ /* THIS WAS USED IN THE ORIGINAL VERSION OF NETCONFD, WHERE ONLY ONE 
+ 		UNIX SOCKET WAS CREATED FOR COMMUNICATION! 
+ 		IN ORDER TO MAKE MORE THAN ONE UNIX SOCKETS WE WILL ACCEPT ONLY 
+ 		ONE PORT PARAMETER, AND ACCORDING TO THIS WE WILL CREATE A SOCKET
+ 		/tmp/PORT.sock. BY THIS MODIFICATION, WE ELIMINATE THE FEATURE OF
+ 		CREATING ONE SOCKET, WHICH CAN BE ACCESS BY DIFFERENT PORTS (up to 4),
+ 		SINCE FOR NOW IT DOES NOT MAKE ANY SENSE. FROM NETCONF RPC SESSION_IDS
+ 		THE COMMUNICATING COMPONENTS CAN IDENTIFY THEMSELVES EVEN IF ONLY ONE
+ 		PORT IS ASSIGNED TO EVERY COMMUNICATION
+ */
+ /*
+ 		leaf-list port {
         max-elements 4;
         description 
           "Specifies the TCP ports that the server will accept
@@ -315,6 +326,19 @@ module netconfd {
 
          type inet:port-number;
       }
+*/      
+      leaf port {
+      	description
+      	"Specifies the port that the server will accept connections from.
+      	Only one port can be defined for one netconfd, but it is not a problem,
+      	since by means of netconf session ids all communication can be identified.
+      	By default, this param will be set to 830 and the corresponding socket file
+      	will be placed in /tmp with the filename 830.sock.";
+      	
+      	type inet:port-number;
+      	default 830;
+      }
+/* -------------------- END LEVI ----------------------------- */      
 
       uses ncxapp:ModuleParm;
 

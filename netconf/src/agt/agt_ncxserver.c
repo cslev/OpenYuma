@@ -78,6 +78,7 @@ static fd_set read_fd_set;
 static fd_set write_fd_set;
 
 
+
 /********************************************************************
  * FUNCTION make_named_socket
  * 
@@ -207,8 +208,28 @@ status_t
     status_t               res;
     boolean                done, done2, stream_output;
 
+
+    profile = agt_get_profile();
+    if (profile == NULL) {
+        return SET_ERROR(ERR_INTERNAL_VAL);
+    }
+
+    /* --------- LEVI ------------ */
+
+    /* get --port CLI param value */
+    uint port = profile->agt_port;
+    //creating the socket filename
+    char begin[16] = "/tmp/ncxserver_";
+    char end[6] = ".sock";
+    sprintf(NCX_SOCKETFILE,"%s%d%s", begin, port, end);
+
     /* Create the socket and set it up to accept connections. */
-    res = make_named_socket(NCXSERVER_SOCKNAME, &ncxsock);
+	res = make_named_socket(NCX_SOCKETFILE, &ncxsock);
+
+    /* Create the socket and set it up to accept connections. */
+//    res = make_named_socket(NCXSERVER_SOCKNAME, &ncxsock);
+    /* --------- END LEVI ----------- */
+
     if (res != NO_ERR) {
         log_error("\n*** Cannot connect to ncxserver socket"
                   "\n*** If no other instances of netconfd are running,"
@@ -216,10 +237,6 @@ status_t
         return res;
     }
 
-    profile = agt_get_profile();
-    if (profile == NULL) {
-        return SET_ERROR(ERR_INTERNAL_VAL);
-    }
 
     stream_output = profile->agt_stream_output;
 
@@ -433,7 +450,10 @@ status_t
      * torn down, but the original ncxserver socket needs to be closed now
      */
     close(ncxsock);
-    unlink(NCXSERVER_SOCKNAME);
+    /*---------- LEVI ---------- */
+    unlink(NCX_SOCKETFILE);
+    //unlink(NCXSERVER_SOCKNAME);
+    /*-------END LEVI ---------- */
     return NO_ERR;
 
 }  /* agt_ncxserver_run */

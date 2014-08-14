@@ -52,6 +52,12 @@ extern "C" {
 *			     T Y P E S				    *
 *								    *
 *********************************************************************/
+/* -------------------- LEVI ------------------------ */
+/* this will be the name of socketfile, which is created by
+ * concatenating '/tmp/ ' with the given port and closing '.sock' string
+ */
+static char NCX_SOCKETFILE[100];
+/* ----------------- END LEVI ----------------------- */
 
 /********************************************************************
 *								    *

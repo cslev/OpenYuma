@@ -1033,15 +1033,27 @@ boolean
         return FALSE;
     }
 
-    if (profile->agt_ports[0]) {
-        /* something configured, so use only that list */
-        for (i = 0; i < AGT_MAX_PORTS; i++) {
-            if (port == profile->agt_ports[i]) {
-                return TRUE;
-            }
-        }
-        return FALSE;
-    } else {
+    /* -------------- LEVI ---------------- */
+    if(profile->agt_port)
+    {
+    	//port has been configured
+    	if(port == profile->agt_port)
+    	{
+    		return TRUE;
+    	}
+    	return FALSE;
+    }
+//    if (profile->agt_ports[0]) {
+//        /* something configured, so use only that list */
+//        for (i = 0; i < AGT_MAX_PORTS; i++) {
+//            if (port == profile->agt_ports[i]) {
+//                return TRUE;
+//            }
+//        }
+//        return FALSE;
+//    }
+    /* ------------- END LEVI ------------- */
+    else {
         /* no ports configured so allow 830 */
         if (port==NCX_NCSSH_PORT) {
             return TRUE;
