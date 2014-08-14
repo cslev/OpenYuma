@@ -12,7 +12,7 @@ Now, when --port argument is used/set a unique socketfile will be generated in /
 directory accordingly.
 
 For instance, if you start a NETCONF agent with --port=830, then the socketfile will
-be /tmp/ncx_server_830.sock.
+be /tmp/ncxserver_830.sock.
 Later, when you start another NETCONF agent with, say --port=832, then a new socketfile 
 will be generated to provide a different communication 'channel'.
 
